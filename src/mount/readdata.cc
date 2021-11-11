@@ -329,7 +329,6 @@ static int read_to_buffer(readrec *rrec, uint64_t current_offset, uint64_t bytes
 	return LIZARDFS_STATUS_OK;
 }
 
-static bool firstRead = true;
 int read_data(void *rr, uint64_t offset, uint32_t size, ReadCache::Result &ret) {
 	readrec *rrec = (readrec*)rr;
 	assert(size % MFSBLOCKSIZE == 0);
@@ -343,18 +342,19 @@ int read_data(void *rr, uint64_t offset, uint32_t size, ReadCache::Result &ret) 
 
 	ReadCache::Result result = rrec->cache.query(offset, size);
 
-	if(!firstRead){
-		oplog_printf("Cache Size: %" PRIu64 ", RemaindedCache: %" PRIu64 "",
-						 (uint64_t)(result.endOffset() - result.frontOffset()),
-						 (uint64_t)(result.endOffset() - offset));
+	uint64_t frontOffset = result.frontOffset();
+	uint64_t endOffset = result.endOffset();
+	if((frontOffset != endOffset) && (offset != endOffset)) {
+		oplog_printf("Cache Size: %" PRIu64 ", Remainded Cache: %" PRIu64 "",
+						 (uint64_t)(endOffset - frontOffset),
+						 (uint64_t)(endOffset - offset));
 	}
 
 	if (result.frontOffset() <= offset && offset + size <= result.endOffset()) {
 		ret = std::move(result);
-		firstRead = false;
 		return LIZARDFS_STATUS_OK;
 	}
-	firstRead = true;
+
 	uint64_t request_offset = result.remainingOffset();
 	uint64_t bytes_to_read_left = std::max<uint64_t>(size, rrec->readahead_adviser.window()) - (request_offset - offset);
 	bytes_to_read_left = (bytes_to_read_left + MFSBLOCKSIZE - 1) / MFSBLOCKSIZE * MFSBLOCKSIZE;
