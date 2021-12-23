@@ -112,6 +112,7 @@ struct mfsopts_ {
 	int prefetchxorstripes;
 	unsigned symlinkcachetimeout;
 	double bandwidthoveruse;
+	bool directio;
 #if FUSE_VERSION >= 30
 	int nonemptymount;
 #endif
@@ -167,7 +168,8 @@ struct mfsopts_ {
 		readaheadmaxwindowsize(LizardClient::FsInitParams::kDefaultReadaheadMaxWindowSize),
 		prefetchxorstripes(LizardClient::FsInitParams::kDefaultPrefetchXorStripes),
 		symlinkcachetimeout(LizardClient::FsInitParams::kDefaultSymlinkCacheTimeout),
-		bandwidthoveruse(LizardClient::FsInitParams::kDefaultBandwidthOveruse)
+		bandwidthoveruse(LizardClient::FsInitParams::kDefaultBandwidthOveruse),
+		directio(LizardClient::FsInitParams::kDirectIO)
 #if FUSE_VERSION >= 30
 		, nonemptymount(LizardClient::FsInitParams::kDefaultNonEmptyMounts)
 #endif

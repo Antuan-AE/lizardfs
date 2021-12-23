@@ -85,6 +85,7 @@ struct fuse_opt gMfsOptsStage2[] = {
 	MFS_OPT("bandwidthoveruse=%lf", bandwidthoveruse, 1),
 	MFS_OPT("mfsdirentrycachesize=%u", direntrycachesize, 0),
 	MFS_OPT("nostdmountoptions", nostdmountoptions, 1),
+	MFS_OPT("directio=%d", directio, 0),
 
 #if FUSE_VERSION >= 26
 	MFS_OPT("enablefilelocks=%u", filelocks, 0),
@@ -228,6 +229,7 @@ printf(
 				"(default: %u)\n"
 "    -o bandwidthoveruse=N       define ratio of allowed bandwidth overuse "
 				"when fetching data (default: %.2f)\n"
+"    -o directio=0|1     Set DirectIO directive as a mount option. (default value: false)\n"
 #if FUSE_VERSION >= 26
 "    -o enablefilelocks=0|1      enables/disables global file locking "
 				"(disabled by default)\n"

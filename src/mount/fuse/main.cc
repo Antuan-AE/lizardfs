@@ -263,6 +263,7 @@ static int mainloop(struct fuse_args *args, const char *mountpoint, bool multith
 	params.acl_cache_timeout = gMountOptions.aclcacheto;
 	params.acl_cache_size = gMountOptions.aclcachesize;
 	params.debug_mode = gMountOptions.debug;
+	params.direct_io = gMountOptions.directio;
 
 	if (!gMountOptions.meta) {
 		LizardClient::fs_init(params);
